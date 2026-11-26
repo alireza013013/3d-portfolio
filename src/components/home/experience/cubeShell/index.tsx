@@ -86,13 +86,13 @@ const CubeShell = ({
     mesh.instanceMatrix.needsUpdate = true;
   }, [matrices]);
 
-  useFrame((_, delta) => {
-    if (!meshRef.current) return;
+  // useFrame((_, delta) => {
+  //   if (!meshRef.current) return;
 
-    meshRef.current.rotation.x += delta * rotationSpeed[0];
-    meshRef.current.rotation.y += delta * rotationSpeed[1];
-    meshRef.current.rotation.z += delta * rotationSpeed[2];
-  });
+  //   meshRef.current.rotation.x += delta * rotationSpeed[0];
+  //   meshRef.current.rotation.y += delta * rotationSpeed[1];
+  //   meshRef.current.rotation.z += delta * rotationSpeed[2];
+  // });
 
   return (
     <instancedMesh
