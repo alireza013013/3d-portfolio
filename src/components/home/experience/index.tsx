@@ -1,160 +1,45 @@
-import * as THREE from "three";
-import { OrbitControls, Billboard } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import { useControls } from "leva";
 import { Perf } from "r3f-perf";
 
-import glowVertex from "../../../shaders/glow/vertex.glsl";
-import glowFragment from "../../../shaders/glow/fragment.glsl";
+// import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
+import Sun from "./sun";
+import Lighting from "./lighting";
 import CubeShell from "./cubeShell/index";
-import { useRef } from "react";
+import InformationCube from "./InformationCube";
+import Explore from "./explore";
 
 const Experience = () => {
-  const {
-    glowTint,
-    glowStrength,
-    haloRadius,
-    haloSoftness,
-    haloWeight,
-    coreWeight,
-    coreFalloff,
-  } = useControls("Plane Glow", {
-    glowTint: { value: "#ff4d00" },
-    glowStrength: { value: 5.9, min: 0, max: 400, step: 0.1 },
-    haloRadius: { value: 0.03, min: 0, max: 0.5, step: 0.01 },
-    haloSoftness: { value: 0.01, min: 0.01, max: 1, step: 0.01 },
-    haloWeight: { value: 0.82, min: 0, max: 3, step: 0.01 },
-    coreWeight: { value: 6.41, min: 0, max: 50, step: 0.01 },
-    coreFalloff: { value: 19, min: 0, max: 100, step: 0.1 },
-  });
-
-  const { backgroundColor } = useControls("Environment", {
-    backgroundColor: { value: "#17212a" },
-  });
-
-  const {
-    positionXDirectionalLight,
-    positionYDirectionalLight,
-    positionZDirectionalLight,
-    intensity,
-    colorDirectionalLight,
-  } = useControls("Directional Yellow Lights", {
-    positionXDirectionalLight: {
-      value: 0,
-      min: -40,
-      max: 40,
-      step: 1,
-    },
-    positionYDirectionalLight: {
-      value: 9,
-      min: -40,
-      max: 40,
-      step: 1,
-    },
-    positionZDirectionalLight: {
-      value: -7,
-      min: -40,
-      max: 40,
-      step: 1,
-    },
-    intensity: { value: 100, min: 0, max: 100, step: 0.1 },
-    colorDirectionalLight: { value: "#ffa300" },
-  });
-  const lightRef = useRef<THREE.InstancedMesh>(null);
-  // useHelper(lightRef, THREE.DirectionalLightHelper, 1.5, "#ffaa00");
-
-  const { intensityAmbientLight, colorAmbientLight } = useControls(
-    "Ambient Lights",
+  const { backgroundColor } = useControls(
+    "Environment",
     {
-      intensityAmbientLight: { value: 0, min: 0, max: 100, step: 0.1 },
-      colorAmbientLight: { value: "#ffffff" },
+      backgroundColor: { value: "#17212a" },
     },
+    { collapsed: true },
   );
-
-  const {
-    positionXBlueDirectionalLight,
-    positionYBlueDirectionalLight,
-    positionZBlueDirectionalLight,
-    intensityBlue,
-    colorBlueDirectionalLight,
-  } = useControls("Directional Blue Lights", {
-    positionXBlueDirectionalLight: {
-      value: 0,
-      min: -40,
-      max: 40,
-      step: 1,
-    },
-    positionYBlueDirectionalLight: {
-      value: 0,
-      min: -40,
-      max: 40,
-      step: 1,
-    },
-    positionZBlueDirectionalLight: {
-      value: 10,
-      min: -40,
-      max: 40,
-      step: 1,
-    },
-    intensityBlue: { value: 6, min: 0, max: 100, step: 0.1 },
-    colorBlueDirectionalLight: { value: "#ffffff" },
-  });
-  const lightBlueRef = useRef<THREE.InstancedMesh>(null);
-  // useHelper(lightBlueRef, THREE.DirectionalLightHelper, 1.5, "#00c3ff");
 
   return (
     <>
       <Perf position="top-left" />
       <OrbitControls enableZoom />
-      <axesHelper args={[5]} />
+      {/* <axesHelper args={[5]} /> */}
 
       <color args={[backgroundColor]} attach="background" />
 
-      <ambientLight
-        intensity={intensityAmbientLight}
-        color={colorAmbientLight}
-      />
-      <directionalLight
-        ref={lightRef}
-        position={[
-          positionXDirectionalLight,
-          positionYDirectionalLight,
-          positionZDirectionalLight,
-        ]}
-        intensity={intensity}
-        color={colorDirectionalLight}
-      />
-      <directionalLight
-        ref={lightBlueRef}
-        position={[
-          positionXBlueDirectionalLight,
-          positionYBlueDirectionalLight,
-          positionZBlueDirectionalLight,
-        ]}
-        intensity={intensityBlue}
-        color={colorBlueDirectionalLight}
-      />
+      {/* <EffectComposer>
+        <Bloom
+          intensity={1.2}
+          luminanceThreshold={0.8}
+          luminanceSmoothing={0.3}
+          mipmapBlur
+        />
+        <Vignette eskil={false} offset={0.25} darkness={0.85} />
+      </EffectComposer> */}
+      <Lighting />
 
-      <Billboard position={[0, 0, 0]}>
-        <mesh>
-          <planeGeometry args={[14, 14]} />
-          <shaderMaterial
-            vertexShader={glowVertex}
-            fragmentShader={glowFragment}
-            key={`${glowVertex}-${glowFragment}`}
-            transparent
-            blending={THREE.AdditiveBlending}
-            uniforms={{
-              uGlowTint: { value: new THREE.Color(glowTint) },
-              uGlowStrength: { value: glowStrength },
-              uHaloRadius: { value: haloRadius },
-              uHaloSoftness: { value: haloSoftness },
-              uHaloWeight: { value: haloWeight },
-              uCoreWeight: { value: coreWeight },
-              uCoreFalloff: { value: coreFalloff },
-            }}
-          />
-        </mesh>
-      </Billboard>
+      <Sun />
+
+      <InformationCube content={<Explore />} />
 
       <CubeShell
         cubeCount={220}

@@ -22,21 +22,25 @@ const CubeShell = ({
 }: CubeShellProps) => {
   const meshRef = useRef<THREE.InstancedMesh>(null);
 
-  const materialProps = useControls(folderName, {
-    metalness: {
-      value: 0,
-      min: 0,
-      max: 1,
-      step: 0.001,
+  const materialProps = useControls(
+    folderName,
+    {
+      metalness: {
+        value: 0,
+        min: 0,
+        max: 1,
+        step: 0.001,
+      },
+      roughness: {
+        value: 0.08,
+        min: 0,
+        max: 1,
+        step: 0.001,
+      },
+      color: { value: "#243258" },
     },
-    roughness: {
-      value: 0.08,
-      min: 0,
-      max: 1,
-      step: 0.001,
-    },
-    color: { value: "#243258" },
-  });
+    { collapsed: true },
+  );
 
   const matrices = useMemo(() => {
     const dummy = new THREE.Object3D();
