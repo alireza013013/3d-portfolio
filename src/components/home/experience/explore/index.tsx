@@ -1,3 +1,5 @@
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
 import "./index.css";
 import github from "../../../../assets/github.svg";
 import linkedin from "../../../../assets/linkedin.svg";
@@ -7,8 +9,32 @@ import ponisha from "../../../../assets/ponisha.svg";
 import avatar from "../../../../assets/avatar.webp";
 
 const Explore = () => {
+  const cardRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      if (!cardRef.current) return;
+
+      const elements = cardRef.current.querySelectorAll(
+        ".profile-card__avatar, .profile-card__greeting, .profile-card__name, .profile-card__title, .profile-card__links a",
+      );
+
+      gsap.from(elements, {
+        y: -15,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        delay: 1,
+        ease: "power3.out",
+      });
+    }, cardRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section
+      ref={cardRef}
       className="profile-card"
       onClick={(event) => event.stopPropagation()}
     >
@@ -27,6 +53,7 @@ const Explore = () => {
         </a>
         <a
           href="https://www.linkedin.com/in/alireza-abdollahi-8869911a8/"
+          target="_blank"
           rel="noreferrer"
           aria-label="LinkedIn"
         >
@@ -34,6 +61,7 @@ const Explore = () => {
         </a>
         <a
           href="https://www.youtube.com/@ALittleDeeper"
+          target="_blank"
           rel="noreferrer"
           aria-label="Youtube"
         >
@@ -41,6 +69,7 @@ const Explore = () => {
         </a>
         <a
           href="https://ponisha.ir/profile/alireza013013"
+          target="_blank"
           rel="noreferrer"
           aria-label="Ponisha"
         >
@@ -48,6 +77,7 @@ const Explore = () => {
         </a>
         <a
           href="https://karlancer.com/profile/703078"
+          target="_blank"
           rel="noreferrer"
           aria-label="Karlancer"
         >

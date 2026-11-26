@@ -63,8 +63,7 @@ const InformationCube = ({
         x: 0,
         y: 0,
         z: 0,
-        duration: 2,
-        ease: "power3.inOut",
+        duration: 1.5,
       });
     }
     setIsShowInformation(!isShowInformation);
