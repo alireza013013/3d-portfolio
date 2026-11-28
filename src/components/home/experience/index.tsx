@@ -8,6 +8,7 @@ import Lighting from "./lighting";
 import CubeShell from "./cubeShell/index";
 import InformationCube from "./InformationCube";
 import Explore from "./explore";
+import CompanyCube from "./companyCube";
 
 const Experience = () => {
   const { backgroundColor } = useControls(
@@ -40,6 +41,8 @@ const Experience = () => {
       <Sun />
 
       <InformationCube content={<Explore />} />
+
+      <CompanyCube position={[-5, 4, 6]} size={2.2} />
 
       <CubeShell
         cubeCount={220}

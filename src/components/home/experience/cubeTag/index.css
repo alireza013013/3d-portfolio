@@ -1,0 +1,89 @@
+.information-cube-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 8px 14px;
+
+    color: #f7df9b;
+    background: rgba(25, 20, 10, 0.82);
+    border: 1px solid rgba(224, 183, 85, 0.72);
+    border-radius: 999px;
+
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    box-shadow:
+        0 4px 18px rgba(0, 0, 0, 0.3),
+        inset 0 0 12px rgba(224, 183, 85, 0.08);
+
+    transition:
+        transform 500ms ease,
+        background-color 500ms ease,
+        border-color 500ms ease,
+        box-shadow 500ms ease,
+        color 500ms ease;
+}
+
+.information-cube-tag:hover {
+    color: #fff2c9;
+    background: rgba(52, 39, 12, 0.92);
+    border-color: #f1cf76;
+
+    box-shadow:
+        0 0 18px rgba(224, 183, 85, 0.22),
+        0 6px 20px rgba(0, 0, 0, 0.35),
+        inset 0 0 12px rgba(224, 183, 85, 0.12);
+
+    transform: translateY(-2px);
+}
+
+.information-cube-tag:active {
+    transform: translateY(0) scale(0.97);
+}
+
+.information-cube-tag:focus-visible {
+    outline: 2px solid #f1cf76;
+    outline-offset: 4px;
+}
+
+.information-cube-tag__dot {
+    width: 7px;
+    height: 7px;
+    flex: 0 0 7px;
+
+    background: #e0b755;
+    border-radius: 50%;
+
+    box-shadow: 0 0 9px rgba(224, 183, 85, 0.75);
+}
+
+.information-cube-tag__arrow {
+    color: #e0b755;
+    font-size: 14px;
+    line-height: 1;
+    transition: transform 180ms ease;
+}
+
+.information-cube-tag:hover .information-cube-tag__arrow {
+    transform: translate(2px, -2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .information-cube-tag,
+    .information-cube-tag__arrow {
+        transition: none;
+    }
+}

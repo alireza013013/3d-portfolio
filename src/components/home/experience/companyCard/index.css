@@ -1,0 +1,51 @@
+.company-card {
+    box-sizing: border-box;
+    width: 340px;
+    padding: 18px;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+.logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+}
+
+.logos a {
+    display: grid;
+    width: 70px;
+    height: 70px;
+    place-items: center;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 8px;
+}
+
+.logos img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+}
+
+.date {
+    margin-bottom: 8px;
+    color: #e0b755;
+    font-size: 16px;
+}
+
+.position {
+    margin-bottom: 10px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.description {
+    margin: auto;
+    color: #d0cec8;
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.5;
+}
