@@ -1,4 +1,4 @@
-import { Html } from "@react-three/drei";
+import { Html, useCursor } from "@react-three/drei";
 import { useControls } from "leva";
 import { useCallback, useRef, useState } from "react";
 import * as THREE from "three";
@@ -19,6 +19,7 @@ interface CompanyCubeProps {
   position?: [number, number, number];
   size?: number;
   startIndex?: number;
+  showPositionCube: [number, number, number];
 }
 
 interface FaceTransform {
@@ -71,12 +72,16 @@ const CompanyCube = ({
   position = [0, 0, 0],
   size = 2.2,
   startIndex = 0,
+  showPositionCube,
 }: CompanyCubeProps) => {
   const materialProps = useControls("Company cube", {
     metalness: { value: 0.24, min: 0, max: 1, step: 0.001 },
     roughness: { value: 0.43, min: 0, max: 1, step: 0.001 },
     color: { value: "#000000" },
   });
+  const [hovered, setHovered] = useState(false);
+
+  useCursor(hovered);
 
   const rootRef = useRef<THREE.Group>(null);
   const rotationGroupRef = useRef<THREE.Group>(null);
@@ -92,7 +97,6 @@ const CompanyCube = ({
   const isChangingRef = useRef(false);
   const [isCardEntered, setIsCardEntered] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
-  const showPositionCube = [0, 0, 17];
 
   const handleCardEnterComplete = useCallback(() => {
     setIsCardEntered(true);
@@ -225,7 +229,14 @@ const CompanyCube = ({
         ref={rotationGroupRef}
         rotation={[0, -initialIndex * (Math.PI / 2), 0]}
       >
-        <mesh>
+        <mesh
+          onPointerOver={(e) => {
+            e.stopPropagation();
+            setHovered(true);
+          }}
+          onPointerOut={() => setHovered(false)}
+          onClick={toggleCube}
+        >
           <boxGeometry args={[size, size, size]} />
           <meshStandardMaterial
             color={materialProps.color}

@@ -19,10 +19,12 @@ const Experience = () => {
     { collapsed: true },
   );
 
+  const showPositionCube: [number, number, number] = [0, 0, 17];
+
   return (
     <>
       <Perf position="top-left" />
-      <OrbitControls enableZoom />
+      {/* <OrbitControls enableZoom /> */}
       {/* <axesHelper args={[5]} /> */}
 
       <color args={[backgroundColor]} attach="background" />
@@ -40,9 +42,16 @@ const Experience = () => {
 
       <Sun />
 
-      <InformationCube content={<Explore />} />
+      <InformationCube
+        content={<Explore />}
+        showPositionCube={showPositionCube}
+      />
 
-      <CompanyCube position={[-5, 4, 6]} size={2.2} />
+      <CompanyCube
+        position={[-5, 4, 6]}
+        size={2.2}
+        showPositionCube={showPositionCube}
+      />
 
       <CubeShell
         cubeCount={220}

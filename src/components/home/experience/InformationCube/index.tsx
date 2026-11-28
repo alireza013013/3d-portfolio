@@ -1,4 +1,4 @@
-import { Html } from "@react-three/drei";
+import { Html, useCursor } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useControls } from "leva";
 import { useRef, useState, type ReactNode } from "react";
@@ -12,12 +12,14 @@ interface InformationCubeProps {
   position?: [number, number, number];
   size?: number;
   content: ReactNode;
+  showPositionCube: [number, number, number];
 }
 
 const InformationCube = ({
   position = [5, 4, 6],
   size = 2.2,
   content,
+  showPositionCube,
 }: InformationCubeProps) => {
   const materialProps = useControls("information cube", {
     metalness: {
@@ -34,10 +36,12 @@ const InformationCube = ({
     },
     color: { value: "#000000" },
   });
+  const [hovered, setHovered] = useState(false);
+
+  useCursor(hovered);
 
   const meshRef = useRef<THREE.Mesh>(null);
   const [isShowInformation, setIsShowInformation] = useState(false);
-  const showPositionCube = [0, 0, 17];
 
   const { contextSafe } = useGSAP();
 
@@ -93,7 +97,16 @@ const InformationCube = ({
   });
 
   return (
-    <mesh ref={meshRef} position={position} onClick={showInformation}>
+    <mesh
+      ref={meshRef}
+      position={position}
+      onClick={showInformation}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        setHovered(true);
+      }}
+      onPointerOut={() => setHovered(false)}
+    >
       <boxGeometry args={[size, size, size]} />
       <meshStandardMaterial
         color={materialProps.color}
@@ -118,9 +131,8 @@ const InformationCube = ({
         <Html
           position={[0, 0, size / 2 + 0.01]}
           center
-          distanceFactor={4}
+          distanceFactor={6}
           zIndexRange={[99, 0]}
-          transform
         >
           {content}
         </Html>
