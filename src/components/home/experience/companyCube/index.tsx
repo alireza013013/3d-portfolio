@@ -13,6 +13,7 @@ import payesh from "../../../../assets/payesh.jpg";
 import gamatrain from "../../../../assets/gamatrain.png";
 import karlancer from "../../../../assets/karlancer.png";
 import ponisha from "../../../../assets/ponisha.svg";
+import { useFrame } from "@react-three/fiber";
 
 interface CompanyCubeProps {
   position?: [number, number, number];
@@ -91,6 +92,7 @@ const CompanyCube = ({
   const isChangingRef = useRef(false);
   const [isCardEntered, setIsCardEntered] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
+  const showPositionCube = [0, 0, 17];
 
   const handleCardEnterComplete = useCallback(() => {
     setIsCardEntered(true);
@@ -121,25 +123,48 @@ const CompanyCube = ({
     });
   });
 
+  const getShortestTarget = (current: number) => {
+    const twoPi = Math.PI * 2;
+    return Math.round(current / twoPi) * twoPi;
+  };
+
   const toggleCube = contextSafe(() => {
-    const root = rootRef.current;
-    if (!root) return;
+    const mesh = rootRef.current;
+    if (!mesh) return;
 
     const nextIsOpen = !isOpenRef.current;
     isOpenRef.current = nextIsOpen;
+    gsap.killTweensOf(mesh.position);
+    gsap.killTweensOf(mesh.rotation);
 
-    gsap.killTweensOf(root.position);
+    if (!isOpen) {
+      gsap.to(mesh.position, {
+        x: showPositionCube[0],
+        y: showPositionCube[1],
+        z: showPositionCube[2],
+        duration: 0.5,
+        ease: "power3.inOut",
+      });
 
-    gsap.to(root.position, {
-      x: nextIsOpen ? 0 : position[0],
-      y: nextIsOpen ? 0 : position[1],
-      z: nextIsOpen ? 17 : position[2],
-      duration: 0.5,
-      ease: "power3.inOut",
-    });
+      gsap.to(mesh.rotation, {
+        x: getShortestTarget(mesh.rotation.x),
+        y: getShortestTarget(mesh.rotation.y),
+        z: getShortestTarget(mesh.rotation.z),
+        duration: 1.2,
+        ease: "power3.out",
+      });
+    } else {
+      gsap.to(mesh.position, {
+        x: position[0],
+        y: position[1],
+        z: position[2],
+        duration: 0.5,
+        ease: "power3.inOut",
+      });
+    }
 
     setIsCardEntered(false);
-    setIsOpen(nextIsOpen);
+    setIsOpen(!isOpen);
   });
 
   const halfSize = size / 2 + 0.015;
@@ -183,6 +208,16 @@ const CompanyCube = ({
       revertOnUpdate: true,
     },
   );
+
+  useFrame((_, delta) => {
+    if (!rootRef.current) return;
+
+    if (!isOpen) {
+      rootRef.current.rotation.x += delta * 0.2;
+      rootRef.current.rotation.y += delta * 0.1;
+      rootRef.current.rotation.z += delta * 0.1;
+    }
+  });
 
   return (
     <group ref={rootRef} position={position}>
