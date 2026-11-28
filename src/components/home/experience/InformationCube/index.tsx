@@ -5,6 +5,7 @@ import { useRef, useState, type ReactNode } from "react";
 import * as THREE from "three";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import CubeTag from "../cubeTag";
 import "./index.css";
 
 interface InformationCubeProps {
@@ -40,32 +41,44 @@ const InformationCube = ({
 
   const { contextSafe } = useGSAP();
 
-  const showInformation = contextSafe(() => {
-    if (!meshRef.current) return;
+  const getShortestTarget = (current: number) => {
+    const twoPi = Math.PI * 2;
+    return Math.round(current / twoPi) * twoPi;
+  };
 
-    if (isShowInformation) {
-      gsap.to(meshRef.current.position, {
-        x: position[0],
-        y: position[1],
-        z: position[2],
-        duration: 0.5,
-        ease: "power3.inOut",
-      });
-    } else {
-      gsap.to(meshRef.current.position, {
+  const showInformation = contextSafe(() => {
+    const mesh = meshRef.current;
+    if (!mesh) return;
+
+    gsap.killTweensOf(mesh.position);
+    gsap.killTweensOf(mesh.rotation);
+
+    if (!isShowInformation) {
+      gsap.to(mesh.position, {
         x: showPositionCube[0],
         y: showPositionCube[1],
         z: showPositionCube[2],
         duration: 0.5,
         ease: "power3.inOut",
       });
-      gsap.to(meshRef.current.rotation, {
-        x: 0,
-        y: 0,
-        z: 0,
-        duration: 1.5,
+
+      gsap.to(mesh.rotation, {
+        x: getShortestTarget(mesh.rotation.x),
+        y: getShortestTarget(mesh.rotation.y),
+        z: getShortestTarget(mesh.rotation.z),
+        duration: 1.2,
+        ease: "power3.out",
+      });
+    } else {
+      gsap.to(mesh.position, {
+        x: position[0],
+        y: position[1],
+        z: position[2],
+        duration: 0.5,
+        ease: "power3.inOut",
       });
     }
+
     setIsShowInformation(!isShowInformation);
   });
 
@@ -94,18 +107,11 @@ const InformationCube = ({
         distanceFactor={18}
         zIndexRange={[100, 0]}
       >
-        <button
-          className="information-cube-tag"
+        <CubeTag
+          name="Explore"
+          isOpen={isShowInformation}
           onClick={showInformation}
-          type="button"
-          aria-label="Explore cube"
-        >
-          <span className="information-cube-tag__dot" aria-hidden="true" />
-          <span>{isShowInformation ? "Back" : "Explore"}</span>
-          <span className="information-cube-tag__arrow" aria-hidden="true">
-            ↗
-          </span>
-        </button>
+        />
       </Html>
 
       {isShowInformation && (
